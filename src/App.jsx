@@ -14,15 +14,15 @@ import PosContextProvider from "./context/pos/PosContextProvider";
 const router = createBrowserRouter([
     {
         path: "/",
-        element: (
-            <PosContextProvider>
-                <HomePage />
-            </PosContextProvider>
-        ),
+        element: <HomePage />,
     },
     {
         path: "/pos",
-        element: <Pos />,
+        element: (
+           <PosContextProvider>
+                <Pos />
+           </PosContextProvider>
+        ),
     },
     {
         path: "/login",

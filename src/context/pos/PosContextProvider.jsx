@@ -15,23 +15,38 @@ export default function PosContextProvider(props) {
                 if (indexFound !== -1) {
                     const selectedItem = prevSate.cart[indexFound];
                     selectedItem.qty += 1;
-                    return prevSate;
+                    return {...prevSate};
                 }
                 return {
                     ...prevSate,
-                    cart: [...prevSate.cart, payload]
+                    cart: [...prevSate.cart, {...payload, qty: 1}]
                 }
             }
 
-            case POSConstant.DECREMENT_QTY:
-            case POSConstant.INCREMENT_QTY:
+            case POSConstant.DECREMENT_QTY: {
+                const indexFound = prevSate.cart.findIndex(item => item.id === payload.id);
+                const selectedItem = prevSate.cart[indexFound];
+                selectedItem.qty -= 1;
+                return {...prevSate};
+            }
+            case POSConstant.INCREMENT_QTY: {
+                const indexFound = prevSate.cart.findIndex(item => item.id === payload.id);
+                const selectedItem = prevSate.cart[indexFound];
+                selectedItem.qty += 1;
+                return {...prevSate};
+            }
             case POSConstant.LOAD_DATA:
                 return {
                     ...prevSate,
                     products: payload
                 }
             case POSConstant.REMOVE_FROM_CART:
+                return {
+                    ...prevSate,
+                    cart: prevSate.cart.filter(item => item.id != payload)
+                }
             default:
+                return prevSate;
         }
     }, posDataType);
 
