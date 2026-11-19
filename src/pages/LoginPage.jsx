@@ -2,23 +2,38 @@ import { useContext } from "react";
 import { Link, useNavigate } from "react-router";
 import { UserContext } from "../lib/globalContext";
 import { userConstant } from "../contsant";
+import { useState } from "react";
+import useLocalStorage from "../hooks/localStorage";
 
 export default function LoginPage() {
     // const { setUser } = useContext(UserContext);
     const { userDispatcher } = useContext(UserContext);
+    const { storage } = useLocalStorage("users", {});
     const navigate = useNavigate();
+    const [error, setError] = useState({ message: "" });
 
     function handleSubmit(e) {
         e.preventDefault();
         const data = new FormData(e.target);
-        userDispatcher({
-            type: userConstant.UPDATE,
-            payload: {
-                email: data.get("email"),
-                password: window.btoa(data.get("password")),
-            },
-        });
-        navigate("/");
+        const username = data.get("username");
+        const password = data.get("password");
+        if (
+            storage?.hasOwnProperty(username) &&
+            btoa(password) === storage[username]?.password
+        ) {
+            const { password, ...restData } = storage[username];
+            userDispatcher({
+                type: userConstant.UPDATE,
+                payload: {
+                    ...restData,
+                },
+            });
+            navigate("/");
+        } else {
+            setError({
+                message: "failed to login username or password is wrong",
+            });
+        }
     }
 
     return (
@@ -29,16 +44,21 @@ export default function LoginPage() {
                     onSubmit={handleSubmit}
                     action=""
                 >
+                    {error.message && (
+                        <div className="w-full p-4 rounded-lg bg-red-100 text-red-700 border border-red-700">
+                            {error.message}
+                        </div>
+                    )}
                     <div className="w-full flex flex-col justify-start items-start gap-2">
-                        <label className="text-lg" htmlFor="email">
-                            email
+                        <label className="text-lg" htmlFor="username">
+                            username
                         </label>
                         <input
-                            placeholder="your@mail.com"
+                            placeholder="username"
                             className="w-full border border-black/25 rounded-lg p-4"
-                            name="email"
-                            id="email"
-                            type="email"
+                            name="username"
+                            id="username"
+                            type="username"
                         />
                     </div>
                     <div className="w-full flex flex-col justify-start items-start gap-2">
@@ -61,12 +81,20 @@ export default function LoginPage() {
                         Login
                     </button>
 
-                    <Link
-                        className="w-full p-4 rounded-lg border border-black text-center"
-                        to={"/"}
-                    >
-                        Back Home
-                    </Link>
+                    <div className="w-full flex items-center justify-center gap-4">
+                        <Link
+                            className="w-full p-4 rounded-lg border border-black text-center"
+                            to={"/register"}
+                        >
+                            Register
+                        </Link>
+                        <Link
+                            className="w-full p-4 rounded-lg border border-black text-center"
+                            to={"/"}
+                        >
+                            Back Home
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>
