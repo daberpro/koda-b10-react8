@@ -26,9 +26,9 @@ export default function RegisterPage() {
         const password = data.get("password");
         const email = data.get("email");
 
-        if (storage?.hasOwnProperty(username)) {
+        if (storage?.hasOwnProperty(username) || Object.values(storage).findIndex(user => user.email == email) != -1) {
             setError({
-                message: "user already registered",
+                message: "username or email already registered",
             });
             return;
         }
