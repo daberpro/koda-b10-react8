@@ -4,11 +4,20 @@ import { UserContext } from "../lib/globalContext";
 import { userConstant } from "../contsant";
 import { useState } from "react";
 import useLocalStorage from "../hooks/localStorage";
+import { useEffect } from "react";
 
 export default function RegisterPage() {
+    const { userState ,userDispatcher } = useContext(UserContext);
     const navigate = useNavigate();
     const { storage, setStorage } = useLocalStorage("users", {});
     const [error, setError] = useState({ message: "" });
+
+    useEffect(() => {
+        if (userState?.username && userState?.email) {
+            navigate("/profile");
+            return;
+        }
+    },[]);
 
     function handleSubmit(e) {
         e.preventDefault();

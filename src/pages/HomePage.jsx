@@ -16,13 +16,16 @@ export default function HomePage() {
                     </span>
 
                     {Object.keys(userState).length > 0 && (
-                        <button onClick={() => {
-                            userDispatcher({
-                               type: userConstant.DELETE
-                            });
-                        }} className="w-full mt-4 p-4 rounded-lg bg-red-100 text-red-700 border border-red-700 cursor-pointer">
-                            Logout
-                        </button>
+                        <>
+                            <Link className="w-full p-4 rounded-lg border border-black text-center" to="/profile">My profile</Link>
+                            <button onClick={() => {
+                                userDispatcher({
+                                   type: userConstant.DELETE
+                                });
+                            }} className="w-full mt-4 p-4 rounded-lg bg-red-100 text-red-700 border border-red-700 cursor-pointer">
+                                Logout
+                            </button>
+                        </>
                     ) }
                 </div>
             </div>

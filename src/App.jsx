@@ -10,6 +10,7 @@ import useLocalStorage from "./hooks/localStorage";
 import RegisterPage from "./pages/RegisterPage";
 import Pos from "./pages/Pos";
 import PosContextProvider from "./context/pos/PosContextProvider";
+import ProfilePage from "./pages/ProfilePage";
 
 const router = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
         element: <LoginPage />,
     },
     {
+        path: "/profile",
+        element: <ProfilePage />,
+    },
+    {
         path: "/register",
         element: <RegisterPage />,
     },
@@ -36,19 +41,35 @@ const router = createBrowserRouter([
 
 export default function App() {
     // const [user, setUser] = useState({});
-    const { setStorage } = useLocalStorage("user", {});
+    const userType = {
+        email: "",
+        username: "",
+        password: "",
+    };
+
     const [userState, userDispatcher] = useReducer((prevState, action) => {
         const { type, payload } = action;
         switch (type) {
-            case userConstant.UPDATE: {
+            case userConstant.UPDATE_MEMORY: {
                 const updatedData = {
-                    email: payload.email || prevState.email,
                     username: payload.username || prevState.username,
+                    email: payload.email || prevState.email
+                };
+                return updatedData;
+            }
+            case userConstant.UPDATE_STORAGE: {
+                const updatedData = {
+                    username: prevState.username,
+                    email: payload.email || prevState.email,
                     password: window.btoa(
                         payload.password || prevState.password,
                     ),
                 };
-                setStorage(updatedData);
+                payload.setStorage({
+                    [prevState.username]: {
+                        ...updatedData
+                    }
+                });
                 return updatedData;
             }
             case userConstant.DELETE:

@@ -4,13 +4,21 @@ import { UserContext } from "../lib/globalContext";
 import { userConstant } from "../contsant";
 import { useState } from "react";
 import useLocalStorage from "../hooks/localStorage";
+import { useEffect } from "react";
 
 export default function LoginPage() {
     // const { setUser } = useContext(UserContext);
-    const { userDispatcher } = useContext(UserContext);
+    const { userState ,userDispatcher } = useContext(UserContext);
     const { storage } = useLocalStorage("users", {});
     const navigate = useNavigate();
     const [error, setError] = useState({ message: "" });
+
+    useEffect(() => {
+        if (userState?.username && userState?.email) {
+            navigate("/profile");
+            return;
+        }
+    },[]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -23,12 +31,12 @@ export default function LoginPage() {
         ) {
             const { password, ...restData } = storage[username];
             userDispatcher({
-                type: userConstant.UPDATE,
+                type: userConstant.UPDATE_MEMORY,
                 payload: {
                     ...restData,
                 },
             });
-            navigate("/");
+            navigate("/profile");
         } else {
             setError({
                 message: "failed to login username or password is wrong",

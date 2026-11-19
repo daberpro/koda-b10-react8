@@ -1,4 +1,5 @@
 export const userConstant = {
-    UPDATE: "update",
+    UPDATE_STORAGE: "update-storage",
+    UPDATE_MEMORY: "update-memory",
     DELETE: "delete"
 }

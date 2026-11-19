@@ -23,7 +23,7 @@ export default function Pos() {
 
     return (
         <div className="flex p-10 bg-slate-100 w-full h-screen">
-            <div className="grid resize-x scrollbar-thin w-[70%] border-r-2 border-r-black/25 p-4 gap-6 h-full overflow-y-auto grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
+            <div className="grid resize-x scrollbar-thin w-[70%] border-r-2 border-r-black/25 p-4 gap-6 h-full overflow-y-auto grid-cols-[repeat(auto-fill,minmax(300px,1fr))]">
                 {state.products.length > 0 ? (
                     state.products.map((item) => {
                         return (
@@ -53,7 +53,7 @@ export default function Pos() {
                     </div>
                 )}
             </div>
-            <div className="h-full w-[30%] scrollbar-thin flex justify-start gap-4 p-4 items-center flex-col overflow-y-auto">
+            <div className="h-full grow scrollbar-thin flex justify-start gap-4 p-4 items-center flex-col overflow-y-auto">
                 {state.cart.length > 0 ? (
                     state.cart.map((item) => {
                         return (
